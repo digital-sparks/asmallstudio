@@ -11,7 +11,7 @@ gsap.registerPlugin(CustomEase);
 window.Webflow ||= [];
 window.Webflow.push(() => {
   document.querySelectorAll('.swiper-testimonials_item').forEach((item) => {
-    const defaultZindex = item?.style.zIndex || 0;
+    const defaultZindex: number = item?.style.zIndex || 0;
 
     item.addEventListener('mouseover', () => {
       item.style.zIndex = 10;
