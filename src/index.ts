@@ -115,7 +115,7 @@ window.Webflow.push(() => {
   gsap.from(
     '.hero_title_span-01',
     {
-      x: '-1.5em',
+      x: '1.5em',
       opacity: 0,
       duration: 1.5,
       ease: 'power2.out',
@@ -125,7 +125,7 @@ window.Webflow.push(() => {
   gsap.from(
     '.hero_title_span-04, .hero_title_span-05',
     {
-      x: '1em',
+      x: '-1.5em',
       opacity: 0,
       duration: 1.5,
       ease: 'power2.out',
@@ -253,7 +253,7 @@ window.Webflow.push(() => {
     );
     const scrollScrubSetting = attr(false, componentEl.getAttribute('tr-marquee-scrollscrub'));
     let moveDistanceSetting = -100;
-    let timeScaleSetting = 1;
+    const timeScaleSetting = 1;
     const pausedStateSetting = false;
 
     if (reverseSetting) moveDistanceSetting = 100;
@@ -272,34 +272,78 @@ window.Webflow.push(() => {
       { xPercent: moveDistanceSetting, ease: 'none', duration: speedSetting }
     );
 
-    const scrubObject = { value: 1 };
-    ScrollTrigger.create({
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        if (!pausedStateSetting) {
-          if (scrollDirectionSetting && timeScaleSetting !== self.direction) {
-            timeScaleSetting = self.direction;
-            marqueeTimeline.timeScale(self.direction);
-          }
-          if (scrollScrubSetting) {
-            // console.log(pageScroller.velocity);
-            let v = self.getVelocity() * 0.006; // pageScroller.velocity * 0.5;
-            v = gsap.utils.clamp(-60, 60, v);
-            const scrubTimeline = gsap.timeline({
-              onUpdate: () => {
-                marqueeTimeline.timeScale(scrubObject.value);
-              },
-            });
-            scrubTimeline.fromTo(
-              scrubObject,
-              { value: v },
-              { value: timeScaleSetting, duration: 0.5 }
-            );
-          }
-        }
-      },
+    element.addEventListener('mouseover', () => {
+      marqueeTimeline.timeScale(0.5);
     });
+    element.addEventListener('mouseout', () => {
+      marqueeTimeline.timeScale(1);
+    });
+
+    // const scrubObject = { value: 1 };
+    // ScrollTrigger.create({
+    //   trigger: 'body',
+    //   start: 'top top',
+    //   end: 'bottom bottom',
+    //   onUpdate: (self) => {
+    //     if (!pausedStateSetting) {
+    //       if (scrollDirectionSetting && timeScaleSetting !== self.direction) {
+    //         timeScaleSetting = self.direction;
+    //         marqueeTimeline.timeScale(self.direction);
+    //       }
+    //       if (scrollScrubSetting) {
+    //         // console.log(pageScroller.velocity);
+    //         let v = self.getVelocity() * 0.006; // pageScroller.velocity * 0.5;
+    //         v = gsap.utils.clamp(-60, 60, v);
+    //         const scrubTimeline = gsap.timeline({
+    //           onUpdate: () => {
+    //             marqueeTimeline.timeScale(scrubObject.value);
+    //           },
+    //         });
+    //         scrubTimeline.fromTo(
+    //           scrubObject,
+    //           { value: v },
+    //           { value: timeScaleSetting, duration: 0.5 }
+    //         );
+    //       }
+    //     }
+    //   },
+    // });
   });
+
+  class ActivityMonitor {
+    private readonly timeoutDuration: number;
+    private timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    constructor(timeoutDuration = 10000) {
+      this.timeoutDuration = timeoutDuration;
+
+      window.addEventListener('click', () => this.resetTimer());
+      window.addEventListener('touch', () => this.resetTimer());
+      window.addEventListener('scroll', () => this.resetTimer());
+    }
+
+    private resetTimer(): void {
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+      }
+      this.timeoutId = setTimeout(() => this.onInactive(), this.timeoutDuration);
+    }
+
+    private onInactive(): void {
+      //   console.log('The webpage has been inactive for 5 seconds');
+      //   gsap.to('.page_breather', {
+      //     display: 'flex',
+      //     opacity: 1,
+      //   });
+      document.querySelector('.hero_title_span-05').click();
+    }
+
+    public startMonitoring(): void {
+      this.resetTimer();
+    }
+  }
+
+  // Usage
+  const monitor = new ActivityMonitor();
+  monitor.startMonitoring();
 });
