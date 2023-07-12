@@ -11567,9 +11567,11 @@
       if (breakpoint.matches === true) {
         if (causeSwiper !== void 0)
           causeSwiper.destroy(true, true);
-        return enableDesktopSwiper();
+        enableDesktopSwiper();
       }
       if (breakpoint.matches === false) {
+        if (causeSwiper !== void 0)
+          causeSwiper.destroy(true, true);
         return enableMobileSwiper();
       }
     };

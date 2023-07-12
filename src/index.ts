@@ -203,16 +203,13 @@ window.Webflow.push(() => {
   const breakpointChecker = function () {
     // if larger viewport and multi-row layout needed
     if (breakpoint.matches === true) {
-      // clean up old instances and inline styles when available
       if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
-
-      // or/and do nothing
-      return enableDesktopSwiper();
+      enableDesktopSwiper();
 
       // else if a small viewport and single column layout needed
     }
     if (breakpoint.matches === false) {
-      // fire small viewport version of swiper
+      if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
       return enableMobileSwiper();
     }
   };
