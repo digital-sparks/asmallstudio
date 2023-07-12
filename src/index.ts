@@ -197,40 +197,84 @@ window.Webflow.push(() => {
     modules: [Navigation],
   });
 
-  const causeSwiper = new Swiper('.swiper-testimonials_container', {
-    wrapperClass: 'swiper-testimonials_wrapper',
-    slideClass: 'swiper-testimonials_slide',
-    centeredSlides: true,
-    speed: 200000,
-    slidesPerView: 'auto',
-    loop: true,
-    breakpoints: {
-      767: {
-        allowTouchMove: false,
-        speed: 100000,
-      },
-    },
-    autoplay: {
-      delay: 0,
-      disableOnInteraction: false,
-      waitForTransition: true,
-    },
-    on: {
-      beforeInit: (swiper) => {
-        swiper.wrapperEl.style.transitionTimingFunction = 'linear';
-      },
-      autoplayStop: (swiper) => {
-        swiper.params.speed = 400;
-        swiper.wrapperEl.style.transitionTimingFunction = 'ease';
-      },
-    },
-    modules: [Autoplay],
-  });
+  let causeSwiper;
+  const breakpoint = window.matchMedia('(min-width:767px)');
 
-  document.querySelector('.swiper-testimonials_container')?.addEventListener('touchend', () => {
-    causeSwiper.params.speed = 200000;
-    causeSwiper.wrapperEl.style.transitionTimingFunction = 'linear';
-  });
+  const breakpointChecker = function () {
+    // if larger viewport and multi-row layout needed
+    if (breakpoint.matches === true) {
+      // clean up old instances and inline styles when available
+      if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
+
+      // or/and do nothing
+      return enableDesktopSwiper();
+
+      // else if a small viewport and single column layout needed
+    }
+    if (breakpoint.matches === false) {
+      // fire small viewport version of swiper
+      return enableMobileSwiper();
+    }
+  };
+
+  breakpoint.addListener(breakpointChecker);
+
+  // kickstart
+  breakpointChecker();
+
+  const enableDesktopSwiper = function () {
+    causeSwiper = new Swiper('.swiper-testimonials_container', {
+      wrapperClass: 'swiper-testimonials_wrapper',
+      slideClass: 'swiper-testimonials_slide',
+      centeredSlides: true,
+      speed: 100000,
+      slidesPerView: 'auto',
+      loop: true,
+      allowTouchMove: false,
+      autoplay: {
+        delay: 0,
+        disableOnInteraction: false,
+        waitForTransition: true,
+      },
+      on: {
+        beforeInit: (swiper) => {
+          swiper.wrapperEl.style.transitionTimingFunction = 'linear';
+        },
+      },
+      modules: [Autoplay],
+    });
+  };
+
+  const enableMobileSwiper = function () {
+    causeSwiper = new Swiper('.swiper-testimonials_wrapper', {
+      wrapperClass: 'swiper-testimonials_slide',
+      slideClass: 'swiper-testimonials_item',
+      centeredSlides: true,
+      speed: 200000,
+      slidesPerView: 'auto',
+      loop: true,
+      autoplay: {
+        delay: 0,
+        disableOnInteraction: false,
+        waitForTransition: true,
+      },
+      on: {
+        beforeInit: (swiper) => {
+          swiper.wrapperEl.style.transitionTimingFunction = 'linear';
+        },
+        autoplayStop: (swiper) => {
+          swiper.params.speed = 400;
+          swiper.wrapperEl.style.transitionTimingFunction = 'ease';
+        },
+      },
+      modules: [Autoplay],
+    });
+
+    document.querySelector('.swiper-testimonials_container')?.addEventListener('touchend', () => {
+      causeSwiper.params.speed = 200000;
+      causeSwiper.wrapperEl.style.transitionTimingFunction = 'linear';
+    });
+  };
 
   // attribute value checker
   function attr(defaultVal, attrVal) {
