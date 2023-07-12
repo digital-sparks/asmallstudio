@@ -248,24 +248,22 @@ window.Webflow.push(() => {
       modules: [Autoplay],
     });
 
-    document.querySelector('.swiper-testimonials_container')?.addEventListener('touchend', () => {
-      causeSwiper.params.speed = 15000;
-      causeSwiper.wrapperEl.style.transitionTimingFunction = 'linear';
-    });
+    // document.querySelector('.swiper-testimonials_container')?.addEventListener('touchend', () => {
+    //   causeSwiper.params.speed = 15000;
+    //   causeSwiper.wrapperEl.style.transitionTimingFunction = 'linear';
+    // });
   };
 
   const breakpointChecker = function () {
     // if larger viewport and multi-row layout needed
     if (breakpoint.matches === true) {
       if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
-      enableDesktopSwiper();
-      console.log('desktop swiper');
+      return enableDesktopSwiper();
 
       // else if a small viewport and single column layout needed
     }
     if (breakpoint.matches === false) {
       if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
-      console.log('mobile swiper');
       return enableMobileSwiper();
     }
   };
