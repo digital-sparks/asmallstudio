@@ -201,11 +201,15 @@ window.Webflow.push(() => {
     wrapperClass: 'swiper-testimonials_wrapper',
     slideClass: 'swiper-testimonials_slide',
     centeredSlides: true,
-    //grabCursor: true,
-    allowTouchMove: false,
-    speed: 100000,
+    speed: 200000,
     slidesPerView: 'auto',
     loop: true,
+    breakpoints: {
+      767: {
+        allowTouchMove: false,
+        speed: 100000,
+      },
+    },
     autoplay: {
       delay: 0,
       disableOnInteraction: false,
@@ -278,36 +282,6 @@ window.Webflow.push(() => {
     element.addEventListener('mouseout', () => {
       marqueeTimeline.timeScale(1);
     });
-
-    // const scrubObject = { value: 1 };
-    // ScrollTrigger.create({
-    //   trigger: 'body',
-    //   start: 'top top',
-    //   end: 'bottom bottom',
-    //   onUpdate: (self) => {
-    //     if (!pausedStateSetting) {
-    //       if (scrollDirectionSetting && timeScaleSetting !== self.direction) {
-    //         timeScaleSetting = self.direction;
-    //         marqueeTimeline.timeScale(self.direction);
-    //       }
-    //       if (scrollScrubSetting) {
-    //         // console.log(pageScroller.velocity);
-    //         let v = self.getVelocity() * 0.006; // pageScroller.velocity * 0.5;
-    //         v = gsap.utils.clamp(-60, 60, v);
-    //         const scrubTimeline = gsap.timeline({
-    //           onUpdate: () => {
-    //             marqueeTimeline.timeScale(scrubObject.value);
-    //           },
-    //         });
-    //         scrubTimeline.fromTo(
-    //           scrubObject,
-    //           { value: v },
-    //           { value: timeScaleSetting, duration: 0.5 }
-    //         );
-    //       }
-    //     }
-    //   },
-    // });
   });
 
   class ActivityMonitor {
@@ -330,11 +304,6 @@ window.Webflow.push(() => {
     }
 
     private onInactive(): void {
-      //   console.log('The webpage has been inactive for 5 seconds');
-      //   gsap.to('.page_breather', {
-      //     display: 'flex',
-      //     opacity: 1,
-      //   });
       document.querySelector('.hero_title_span-05').click();
     }
 
