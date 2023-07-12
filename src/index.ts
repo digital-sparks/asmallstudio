@@ -219,8 +219,17 @@ window.Webflow.push(() => {
       beforeInit: (swiper) => {
         swiper.wrapperEl.style.transitionTimingFunction = 'linear';
       },
+      autoplayStop: (swiper) => {
+        swiper.params.speed = 400;
+        swiper.wrapperEl.style.transitionTimingFunction = 'ease';
+      },
     },
     modules: [Autoplay],
+  });
+
+  document.querySelector('.swiper-testimonials_container')?.addEventListener('touchend', () => {
+    causeSwiper.params.speed = 200000;
+    causeSwiper.wrapperEl.style.transitionTimingFunction = 'linear';
   });
 
   // attribute value checker
