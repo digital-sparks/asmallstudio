@@ -200,25 +200,6 @@ window.Webflow.push(() => {
   let causeSwiper;
   const breakpoint = window.matchMedia('(min-width:767px)');
 
-  const breakpointChecker = function () {
-    // if larger viewport and multi-row layout needed
-    if (breakpoint.matches === true) {
-      if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
-      enableDesktopSwiper();
-
-      // else if a small viewport and single column layout needed
-    }
-    if (breakpoint.matches === false) {
-      if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
-      return enableMobileSwiper();
-    }
-  };
-
-  breakpoint.addListener(breakpointChecker);
-
-  // kickstart
-  breakpointChecker();
-
   const enableDesktopSwiper = function () {
     causeSwiper = new Swiper('.swiper-testimonials_container', {
       wrapperClass: 'swiper-testimonials_wrapper',
@@ -245,22 +226,22 @@ window.Webflow.push(() => {
   const enableMobileSwiper = function () {
     causeSwiper = new Swiper('.swiper-testimonials_wrapper', {
       wrapperClass: 'swiper-testimonials_slide',
-      slideClass: 'swiper-testimonials_item',
+      slideClass: 'swiper-testimonials_item.show--mobile-landscape',
       centeredSlides: true,
-      speed: 200000,
+      speed: 15000,
       slidesPerView: 'auto',
       loop: true,
       autoplay: {
         delay: 0,
-        disableOnInteraction: false,
-        waitForTransition: true,
+        // disableOnInteraction: true,
+        // waitForTransition: true,
       },
       on: {
         beforeInit: (swiper) => {
           swiper.wrapperEl.style.transitionTimingFunction = 'linear';
         },
         autoplayStop: (swiper) => {
-          swiper.params.speed = 400;
+          swiper.params.speed = 600;
           swiper.wrapperEl.style.transitionTimingFunction = 'ease';
         },
       },
@@ -268,10 +249,31 @@ window.Webflow.push(() => {
     });
 
     document.querySelector('.swiper-testimonials_container')?.addEventListener('touchend', () => {
-      causeSwiper.params.speed = 200000;
+      causeSwiper.params.speed = 15000;
       causeSwiper.wrapperEl.style.transitionTimingFunction = 'linear';
     });
   };
+
+  const breakpointChecker = function () {
+    // if larger viewport and multi-row layout needed
+    if (breakpoint.matches === true) {
+      if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
+      enableDesktopSwiper();
+      console.log('desktop swiper');
+
+      // else if a small viewport and single column layout needed
+    }
+    if (breakpoint.matches === false) {
+      if (causeSwiper !== undefined) causeSwiper.destroy(true, true);
+      console.log('mobile swiper');
+      return enableMobileSwiper();
+    }
+  };
+
+  breakpoint.addListener(breakpointChecker);
+
+  // kickstart
+  breakpointChecker();
 
   // attribute value checker
   function attr(defaultVal, attrVal) {
