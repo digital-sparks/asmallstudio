@@ -12,12 +12,33 @@ window.Webflow ||= [];
 window.Webflow.push(() => {
   document.querySelectorAll('.swiper-testimonials_item').forEach((item) => {
     const defaultZindex: number = item?.style.zIndex || 0;
+    const popupLink = item.querySelector('.testimonial-popup_link');
+    const popupArrow = popupLink?.querySelectorAll('.testimonial-popup_arrow');
+
+    popupLink?.addEventListener('mouseover', () => {
+      gsap.to(popupArrow, {
+        xPercent: 125,
+        yPercent: -125,
+        duration: 0.4,
+        delay: 0.1,
+      });
+    });
+
+    popupLink?.addEventListener('mouseout', () => {
+      gsap.to(popupArrow, {
+        xPercent: 0,
+        yPercent: 0,
+        duration: 0.5,
+      });
+    });
 
     item.addEventListener('mouseover', () => {
       item.style.zIndex = 10;
+      item.querySelector('.testimonial-popup').style.pointerEvents = 'all';
     });
     item.addEventListener('mouseout', () => {
       item.style.zIndex = defaultZindex;
+      item.querySelector('.testimonial-popup').style.pointerEvents = 'none';
     });
   });
 
@@ -231,6 +252,7 @@ window.Webflow.push(() => {
       speed: 15000,
       slidesPerView: 'auto',
       loop: true,
+      // autoHeight: true,
       autoplay: {
         delay: 0,
         // disableOnInteraction: true,
@@ -348,6 +370,7 @@ window.Webflow.push(() => {
 
     private resetTimer(): void {
       if (this.timeoutId) {
+        // console.log('user interacted with screen');
         clearTimeout(this.timeoutId);
       }
       this.timeoutId = setTimeout(() => this.onInactive(), this.timeoutDuration);
@@ -362,7 +385,7 @@ window.Webflow.push(() => {
     }
   }
 
-  // Usage
+  // Usage;
   const monitor = new ActivityMonitor();
   monitor.startMonitoring();
 });
