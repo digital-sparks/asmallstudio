@@ -34,11 +34,13 @@ window.Webflow.push(() => {
 
     item.addEventListener('mouseover', () => {
       item.style.zIndex = 10;
-      item.querySelector('.testimonial-popup').style.pointerEvents = 'all';
+      const popup = item.querySelector('.testimonial-popup');
+      if (popup) popup.style.pointerEvents = 'all';
     });
     item.addEventListener('mouseout', () => {
       item.style.zIndex = defaultZindex;
-      item.querySelector('.testimonial-popup').style.pointerEvents = 'none';
+      const popup = item.querySelector('.testimonial-popup');
+      if (popup) popup.style.pointerEvents = 'none';
     });
   });
 
@@ -252,11 +254,8 @@ window.Webflow.push(() => {
       speed: 15000,
       slidesPerView: 'auto',
       loop: true,
-      // autoHeight: true,
       autoplay: {
         delay: 0,
-        // disableOnInteraction: true,
-        // waitForTransition: true,
       },
       on: {
         beforeInit: (swiper) => {
@@ -359,13 +358,30 @@ window.Webflow.push(() => {
   class ActivityMonitor {
     private readonly timeoutDuration: number;
     private timeoutId: ReturnType<typeof setTimeout> | null = null;
+    private currentState = false;
 
-    constructor(timeoutDuration = 10000) {
+    constructor(timeoutDuration = 7500) {
       this.timeoutDuration = timeoutDuration;
 
       window.addEventListener('click', () => this.resetTimer());
       window.addEventListener('touch', () => this.resetTimer());
       window.addEventListener('scroll', () => this.resetTimer());
+      window.addEventListener('input', () => this.resetTimer());
+      window.addEventListener('mousemove', () => this.resetTimer());
+
+      document.querySelector('.page_breather_button_skip')?.addEventListener('click', () => {
+        this.currentState = false;
+        // console.log('reset');
+      });
+      document.querySelector('.page_breather_button_done')?.addEventListener('click', () => {
+        this.currentState = false;
+        // console.log('reset');
+      });
+
+      document.querySelector('.hero_title_span-05')?.addEventListener('click', () => {
+        this.currentState = true;
+        // console.log('state to true');
+      });
     }
 
     private resetTimer(): void {
@@ -377,7 +393,11 @@ window.Webflow.push(() => {
     }
 
     private onInactive(): void {
-      document.querySelector('.hero_title_span-05').click();
+      // console.log('should trigger now', this.currentState);
+      if (this.currentState === false) {
+        document.querySelector('.hero_title_span-05')?.click();
+        this.currentState = true;
+      }
     }
 
     public startMonitoring(): void {
