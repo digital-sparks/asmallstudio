@@ -360,7 +360,7 @@ window.Webflow.push(() => {
     private timeoutId: ReturnType<typeof setTimeout> | null = null;
     private currentState = false;
 
-    constructor(timeoutDuration = 7500) {
+    constructor(timeoutDuration = 20000) {
       this.timeoutDuration = timeoutDuration;
 
       window.addEventListener('click', () => this.resetTimer());
